@@ -82,3 +82,17 @@ class ProviderFallbackChain:
             model=cfg.model_name,
             base_url=cfg.base_url,
         )
+
+
+def build_chain_for_user(user) -> ProviderFallbackChain:
+    """
+    Construct a ProviderFallbackChain from a user's saved ProviderConfigs,
+    ordered by fallback_order ascending.
+
+    Local import of ProviderConfig keeps the rest of the module Django-free
+    so unit tests of ProviderFallbackChain itself don't require django.setup().
+    """
+    from .models import ProviderConfig
+
+    configs = list(ProviderConfig.objects.filter(user=user))
+    return ProviderFallbackChain(configs)
