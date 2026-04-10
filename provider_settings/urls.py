@@ -1,11 +1,14 @@
-"""
-URL routes for provider_settings — wired in Phase 4.
-"""
-from django.urls import path
+from django.urls import include, path
+from rest_framework.routers import DefaultRouter
+
+from .views import ProviderConfigViewSet, ProviderTestView
+
+router = DefaultRouter()
+router.register("config", ProviderConfigViewSet, basename="provider-config")
 
 app_name = "provider_settings"
 
-urlpatterns: list = [
-    # path("config/", ProviderConfigView.as_view(), name="config"),
-    # path("test/",   ProviderTestView.as_view(),   name="test"),
+urlpatterns = [
+    path("", include(router.urls)),
+    path("test/", ProviderTestView.as_view(), name="test"),
 ]
